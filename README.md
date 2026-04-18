@@ -75,7 +75,7 @@ src/
 scripts/eval.ts             # prompt eval harness (runs against ../eval/datasets)
 ```
 
-A sibling `/eval/datasets/` directory holds 50 AMI scenario meetings + 25 ICSI meetings parsed to JSON for offline prompt iteration (no audio). See [../eval/datasets/README.md](../eval/datasets/README.md).
+`./eval/datasets/` holds 50 AMI scenario meetings + 25 ICSI meetings parsed to JSON for offline prompt iteration (no audio). See [./eval/datasets/README.md](./eval/datasets/README.md).
 
 ## Prompt strategy (the part graders care about)
 
@@ -176,7 +176,7 @@ npm run eval -- --meetings ES2002a,Bmr001       # specific IDs
 npm run eval -- --interval 30 --window 180 --points 8
 ```
 
-Outputs land in `../eval/runs/{YYYY-MM-DD-HH-mm}/`:
+Outputs land in `./eval/runs/{YYYY-MM-DD-HH-mm}/`:
 - `{meeting_id}.json` — per-timepoint: window sent, latency, parsed items, raw-on-failure.
 - `_summary.json` — parse rate, avg/p95 latency, distribution across the 5 types.
 
@@ -212,5 +212,5 @@ Server routes log per-request latency to the Vercel function logs (`[suggest] 11
 ## Credits
 
 - Built against the TwinMind reference prototype.
-- Transcript evaluation corpus: AMI + ICSI (CC BY 4.0) — parsed in `../eval/datasets/`.
+- Transcript evaluation corpus: AMI + ICSI (CC BY 4.0) — parsed in `./eval/datasets/`.
 - Radix UI primitives; shadcn-style component patterns.

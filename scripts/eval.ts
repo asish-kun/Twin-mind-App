@@ -19,8 +19,8 @@ import Groq from "groq-sdk";
 import { parseSuggestionResponse } from "../src/lib/schema";
 import { LIVE_SUGGESTION_PROMPT } from "../src/lib/defaults";
 
-const DATASETS_ROOT = path.resolve(__dirname, "../../eval/datasets/processed");
-const RUNS_ROOT = path.resolve(__dirname, "../../eval/runs");
+const DATASETS_ROOT = path.resolve(__dirname, "../eval/datasets/processed");
+const RUNS_ROOT = path.resolve(__dirname, "../eval/runs");
 const MODEL = "openai/gpt-oss-120b";
 
 interface Turn {

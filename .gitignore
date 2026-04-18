@@ -34,6 +34,8 @@ yarn-error.log*
 
 # eval run artifacts
 /eval/runs/
+# eval raw archives (regenerable)
+/eval/datasets/raw/
 
 # typescript
 *.tsbuildinfo

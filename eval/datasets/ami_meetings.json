@@ -1,0 +1,302 @@
+[
+  {
+    "id": "ES2002a",
+    "duration_sec": 1109.45,
+    "turns": 576,
+    "speakers": 4
+  },
+  {
+    "id": "ES2002b",
+    "duration_sec": 2165.82,
+    "turns": 1444,
+    "speakers": 4
+  },
+  {
+    "id": "ES2002c",
+    "duration_sec": 2406.1,
+    "turns": 1480,
+    "speakers": 4
+  },
+  {
+    "id": "ES2002d",
+    "duration_sec": 2400.86,
+    "turns": 2158,
+    "speakers": 4
+  },
+  {
+    "id": "ES2003a",
+    "duration_sec": 1126.69,
+    "turns": 213,
+    "speakers": 4
+  },
+  {
+    "id": "ES2003b",
+    "duration_sec": 2100.45,
+    "turns": 622,
+    "speakers": 4
+  },
+  {
+    "id": "ES2003c",
+    "duration_sec": 2251.55,
+    "turns": 684,
+    "speakers": 4
+  },
+  {
+    "id": "ES2003d",
+    "duration_sec": 2344.85,
+    "turns": 936,
+    "speakers": 4
+  },
+  {
+    "id": "ES2004a",
+    "duration_sec": 1049.04,
+    "turns": 741,
+    "speakers": 4
+  },
+  {
+    "id": "ES2004b",
+    "duration_sec": 2341.97,
+    "turns": 1357,
+    "speakers": 4
+  },
+  {
+    "id": "ES2004c",
+    "duration_sec": 2331.79,
+    "turns": 1469,
+    "speakers": 4
+  },
+  {
+    "id": "ES2004d",
+    "duration_sec": 2222.25,
+    "turns": 1744,
+    "speakers": 4
+  },
+  {
+    "id": "ES2005a",
+    "duration_sec": 306.4,
+    "turns": 209,
+    "speakers": 4
+  },
+  {
+    "id": "ES2005b",
+    "duration_sec": 2298.89,
+    "turns": 1348,
+    "speakers": 4
+  },
+  {
+    "id": "ES2005c",
+    "duration_sec": 2295.25,
+    "turns": 1927,
+    "speakers": 4
+  },
+  {
+    "id": "ES2005d",
+    "duration_sec": 1664.76,
+    "turns": 1042,
+    "speakers": 4
+  },
+  {
+    "id": "ES2006a",
+    "duration_sec": 1282.15,
+    "turns": 519,
+    "speakers": 4
+  },
+  {
+    "id": "ES2006b",
+    "duration_sec": 2179.78,
+    "turns": 1374,
+    "speakers": 4
+  },
+  {
+    "id": "ES2006c",
+    "duration_sec": 2181.64,
+    "turns": 1636,
+    "speakers": 4
+  },
+  {
+    "id": "ES2006d",
+    "duration_sec": 1967.33,
+    "turns": 2248,
+    "speakers": 4
+  },
+  {
+    "id": "ES2007a",
+    "duration_sec": 1206.24,
+    "turns": 613,
+    "speakers": 4
+  },
+  {
+    "id": "ES2007b",
+    "duration_sec": 1682.73,
+    "turns": 838,
+    "speakers": 4
+  },
+  {
+    "id": "ES2007c",
+    "duration_sec": 2377.37,
+    "turns": 1249,
+    "speakers": 4
+  },
+  {
+    "id": "ES2007d",
+    "duration_sec": 1247.77,
+    "turns": 844,
+    "speakers": 4
+  },
+  {
+    "id": "ES2008a",
+    "duration_sec": 1041.14,
+    "turns": 282,
+    "speakers": 4
+  },
+  {
+    "id": "ES2008b",
+    "duration_sec": 2229.18,
+    "turns": 959,
+    "speakers": 4
+  },
+  {
+    "id": "ES2008c",
+    "duration_sec": 2098.24,
+    "turns": 1169,
+    "speakers": 4
+  },
+  {
+    "id": "ES2008d",
+    "duration_sec": 2622.63,
+    "turns": 1756,
+    "speakers": 4
+  },
+  {
+    "id": "ES2009a",
+    "duration_sec": 1398.65,
+    "turns": 898,
+    "speakers": 4
+  },
+  {
+    "id": "ES2009b",
+    "duration_sec": 1429.64,
+    "turns": 660,
+    "speakers": 4
+  },
+  {
+    "id": "ES2009c",
+    "duration_sec": 1953.07,
+    "turns": 972,
+    "speakers": 4
+  },
+  {
+    "id": "ES2009d",
+    "duration_sec": 2114.9,
+    "turns": 1593,
+    "speakers": 4
+  },
+  {
+    "id": "ES2010a",
+    "duration_sec": 640.77,
+    "turns": 286,
+    "speakers": 4
+  },
+  {
+    "id": "ES2010b",
+    "duration_sec": 1751.93,
+    "turns": 957,
+    "speakers": 4
+  },
+  {
+    "id": "ES2010c",
+    "duration_sec": 1832.44,
+    "turns": 1145,
+    "speakers": 4
+  },
+  {
+    "id": "ES2010d",
+    "duration_sec": 969.18,
+    "turns": 945,
+    "speakers": 4
+  },
+  {
+    "id": "ES2011a",
+    "duration_sec": 1113.77,
+    "turns": 615,
+    "speakers": 4
+  },
+  {
+    "id": "ES2011b",
+    "duration_sec": 1571.53,
+    "turns": 1121,
+    "speakers": 4
+  },
+  {
+    "id": "ES2011c",
+    "duration_sec": 1611.87,
+    "turns": 1119,
+    "speakers": 4
+  },
+  {
+    "id": "ES2011d",
+    "duration_sec": 1977.02,
+    "turns": 1157,
+    "speakers": 4
+  },
+  {
+    "id": "ES2012a",
+    "duration_sec": 1102.1,
+    "turns": 274,
+    "speakers": 4
+  },
+  {
+    "id": "ES2012b",
+    "duration_sec": 2228.25,
+    "turns": 784,
+    "speakers": 4
+  },
+  {
+    "id": "ES2012c",
+    "duration_sec": 2204.92,
+    "turns": 1418,
+    "speakers": 4
+  },
+  {
+    "id": "ES2012d",
+    "duration_sec": 948.01,
+    "turns": 691,
+    "speakers": 4
+  },
+  {
+    "id": "ES2013a",
+    "duration_sec": 822.32,
+    "turns": 286,
+    "speakers": 4
+  },
+  {
+    "id": "ES2013b",
+    "duration_sec": 2125.08,
+    "turns": 863,
+    "speakers": 4
+  },
+  {
+    "id": "ES2013c",
+    "duration_sec": 2357.69,
+    "turns": 861,
+    "speakers": 4
+  },
+  {
+    "id": "ES2013d",
+    "duration_sec": 1898.52,
+    "turns": 928,
+    "speakers": 4
+  },
+  {
+    "id": "ES2014a",
+    "duration_sec": 1148.92,
+    "turns": 309,
+    "speakers": 4
+  },
+  {
+    "id": "ES2014b",
+    "duration_sec": 2317.39,
+    "turns": 1135,
+    "speakers": 4
+  }
+]

@@ -1,0 +1,152 @@
+[
+  {
+    "id": "Bdb001",
+    "duration_sec": 2891.01,
+    "turns": 2090,
+    "speakers": 6
+  },
+  {
+    "id": "Bed002",
+    "duration_sec": 3880.93,
+    "turns": 1182,
+    "speakers": 6
+  },
+  {
+    "id": "Bed003",
+    "duration_sec": 3498.68,
+    "turns": 2129,
+    "speakers": 4
+  },
+  {
+    "id": "Bed004",
+    "duration_sec": 3321.32,
+    "turns": 725,
+    "speakers": 4
+  },
+  {
+    "id": "Bed005",
+    "duration_sec": 3815.85,
+    "turns": 1486,
+    "speakers": 6
+  },
+  {
+    "id": "Bed006",
+    "duration_sec": 3733.47,
+    "turns": 2514,
+    "speakers": 7
+  },
+  {
+    "id": "Bed008",
+    "duration_sec": 5079.21,
+    "turns": 1627,
+    "speakers": 5
+  },
+  {
+    "id": "Bed009",
+    "duration_sec": 3201.8,
+    "turns": 1181,
+    "speakers": 7
+  },
+  {
+    "id": "Bed010",
+    "duration_sec": 3178.79,
+    "turns": 1333,
+    "speakers": 7
+  },
+  {
+    "id": "Bed011",
+    "duration_sec": 3234.17,
+    "turns": 1387,
+    "speakers": 6
+  },
+  {
+    "id": "Bed012",
+    "duration_sec": 2598.41,
+    "turns": 923,
+    "speakers": 4
+  },
+  {
+    "id": "Bed013",
+    "duration_sec": 3548.21,
+    "turns": 1807,
+    "speakers": 5
+  },
+  {
+    "id": "Bed014",
+    "duration_sec": 3172.85,
+    "turns": 2276,
+    "speakers": 6
+  },
+  {
+    "id": "Bed015",
+    "duration_sec": 4810.02,
+    "turns": 2910,
+    "speakers": 6
+  },
+  {
+    "id": "Bed016",
+    "duration_sec": 2631.23,
+    "turns": 1618,
+    "speakers": 6
+  },
+  {
+    "id": "Bed017",
+    "duration_sec": 2321.87,
+    "turns": 707,
+    "speakers": 6
+  },
+  {
+    "id": "Bmr001",
+    "duration_sec": 2182.6,
+    "turns": 1314,
+    "speakers": 3
+  },
+  {
+    "id": "Bmr002",
+    "duration_sec": 2745.29,
+    "turns": 2136,
+    "speakers": 4
+  },
+  {
+    "id": "Bmr003",
+    "duration_sec": 4622.3,
+    "turns": 4555,
+    "speakers": 5
+  },
+  {
+    "id": "Bmr005",
+    "duration_sec": 4262.51,
+    "turns": 2388,
+    "speakers": 8
+  },
+  {
+    "id": "Bmr006",
+    "duration_sec": 4714.54,
+    "turns": 4288,
+    "speakers": 6
+  },
+  {
+    "id": "Bmr007",
+    "duration_sec": 3602.88,
+    "turns": 2645,
+    "speakers": 8
+  },
+  {
+    "id": "Bmr008",
+    "duration_sec": 4093.66,
+    "turns": 3449,
+    "speakers": 6
+  },
+  {
+    "id": "Bmr009",
+    "duration_sec": 2997.02,
+    "turns": 3239,
+    "speakers": 5
+  },
+  {
+    "id": "Bmr010",
+    "duration_sec": 3265.38,
+    "turns": 2215,
+    "speakers": 7
+  }
+]
