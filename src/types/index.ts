@@ -24,11 +24,29 @@ export interface Suggestion {
   rationale?: string;
 }
 
+export interface SuggestionBatchMeta {
+  /** Window bounds in session seconds */
+  t_window_start: number;
+  t_window_end: number;
+  model: string;
+  /** Server-measured Groq call latency */
+  latencyMs: number;
+  /** End-to-end: click/tick → batch visible in store. Measured client-side. */
+  clientLatencyMs?: number;
+  /** True if the JSON response needed a retry / repair pass */
+  repaired?: boolean;
+  /** Set by the Jaccard dedupe path when we recognise a near-duplicate */
+  dedupedFromBatchId?: string;
+}
+
 export interface SuggestionBatch {
   id: string;
   /** Seconds from session start */
   t: number;
   items: Suggestion[];
+  meta?: SuggestionBatchMeta;
+  /** User has clicked at least one card in this batch */
+  visitedIds?: string[];
 }
 
 export interface ChatMessage {
@@ -38,13 +56,20 @@ export interface ChatMessage {
   role: "user" | "assistant";
   content: string;
   sourceSuggestionId?: string;
-  pending?: boolean;
+  /** Assistant message is mid-stream */
+  streaming?: boolean;
+  /** Stream aborted or errored */
+  errored?: boolean;
+  /** Latency from send to first token, when measured */
+  firstTokenMs?: number;
 }
 
 export interface SessionSnapshot {
   session_id: string;
   started_at: number;
+  started_at_iso: string;
   ended_at: number | null;
+  ended_at_iso: string | null;
   transcript: TranscriptLine[];
   suggestion_batches: SuggestionBatch[];
   chat: ChatMessage[];

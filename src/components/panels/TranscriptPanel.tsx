@@ -11,6 +11,7 @@ import { useSessionStore } from "@/store/sessionStore";
 import { useSettingsStore } from "@/store/settingsStore";
 import { useLiveTranscription } from "@/hooks/useLiveTranscription";
 import { isRecordingSupported } from "@/lib/recorder";
+import { TOGGLE_MIC_EVENT } from "@/hooks/useKeyboardShortcuts";
 
 interface TranscriptPanelProps {
   onOpenSettings: () => void;
@@ -54,6 +55,17 @@ export function TranscriptPanel({ onOpenSettings }: TranscriptPanelProps) {
   }, [transcript]);
 
   const toggle = () => (isRecording ? stop() : start());
+
+  useEffect(() => {
+    const h = () => {
+      if (!apiKey || !supported) return;
+      toggle();
+    };
+    window.addEventListener(TOGGLE_MIC_EVENT, h);
+    return () => window.removeEventListener(TOGGLE_MIC_EVENT, h);
+    // Only depend on the primitives — `toggle` closes over them.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isRecording, apiKey, supported]);
 
   return (
     <AnimatedBorder state={isRecording ? "active" : "idle"} tone="indigo" className="flex h-full flex-col">
