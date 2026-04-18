@@ -1,10 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Mic, Settings as SettingsIcon } from "lucide-react";
+import { Download, FileJson, FileText, Mic, Settings as SettingsIcon } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useSessionStore } from "@/store/sessionStore";
 import { formatMMSS } from "@/lib/utils";
+import { exportJson, exportText, sessionIsEmpty } from "@/lib/export";
 
 interface HeaderProps {
   onOpenSettings: () => void;
@@ -13,6 +23,9 @@ interface HeaderProps {
 export function Header({ onOpenSettings }: HeaderProps) {
   const isRecording = useSessionStore((s) => s.isRecording);
   const startedAt = useSessionStore((s) => s.startedAt);
+  const transcriptLen = useSessionStore((s) => s.transcript.length);
+  const batchesLen = useSessionStore((s) => s.batches.length);
+  const chatLen = useSessionStore((s) => s.chat.length);
   const [now, setNow] = useState(Date.now());
 
   useEffect(() => {
@@ -22,6 +35,7 @@ export function Header({ onOpenSettings }: HeaderProps) {
   }, [isRecording]);
 
   const elapsed = startedAt ? (now - startedAt) / 1000 : 0;
+  const empty = transcriptLen === 0 && batchesLen === 0 && chatLen === 0;
 
   return (
     <header className="flex items-center justify-between border-b border-border/70 bg-background/70 px-6 py-3 backdrop-blur-sm">
@@ -39,7 +53,7 @@ export function Header({ onOpenSettings }: HeaderProps) {
         </div>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
         {isRecording && (
           <div className="flex items-center gap-2 rounded-full bg-rose-50 px-2.5 py-1 text-xs font-medium text-rose-700 ring-1 ring-rose-200">
             <span className="relative flex h-1.5 w-1.5">
@@ -49,6 +63,46 @@ export function Header({ onOpenSettings }: HeaderProps) {
             REC {formatMMSS(elapsed)}
           </div>
         )}
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              size="sm"
+              disabled={empty}
+              className="gap-1.5"
+              title={empty ? "Nothing to export yet" : "Export session"}
+            >
+              <Download className="h-4 w-4" />
+              Export
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Download session</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onSelect={() => {
+                if (sessionIsEmpty()) return;
+                exportJson();
+                toast.success("Exported session JSON");
+              }}
+            >
+              <FileJson className="h-4 w-4" />
+              JSON
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onSelect={() => {
+                if (sessionIsEmpty()) return;
+                exportText();
+                toast.success("Exported session text");
+              }}
+            >
+              <FileText className="h-4 w-4" />
+              Plain text
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
         <Button variant="ghost" size="sm" onClick={onOpenSettings} className="gap-1.5">
           <SettingsIcon className="h-4 w-4" />
           Settings
