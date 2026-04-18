@@ -4,8 +4,8 @@ A live meeting copilot. Listens to mic audio, transcribes it in ~25 s chunks, an
 
 Take-home assignment submission for TwinMind.
 
-> Live demo: _paste your deployed URL here after `vercel deploy`_
-> Repo: _paste your GitHub URL here_
+> **Live demo:** https://twinmind-flax.vercel.app
+> **Repo:** https://github.com/asish-kun/Twin-mind-App
 
 ## Stack
 
