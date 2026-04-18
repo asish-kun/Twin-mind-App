@@ -79,10 +79,20 @@ export function useSuggestionEngine(opts?: {
   const lastTranscriptLenRef = useRef(0);
   const batchCountRef = useRef(0);
 
+  // Stabilise `opts` across parent re-renders. The parent passes a fresh
+  // `{ onBadKey }` object literal each render; without this ref, the
+  // `generate` useCallback would change identity every render, which would
+  // tear down + rebuild the auto-tick interval effect every render too —
+  // meaning the 30 s setTimeout would reset every 1 s clock update and never
+  // fire. This was the Phase 2a bug where no suggestion batches were ever
+  // generated during a live session.
+  const optsRef = useRef(opts);
+  optsRef.current = opts;
+
   const generate = useCallback(
     async (_manual: boolean) => {
       if (!apiKey) {
-        opts?.onBadKey?.();
+        optsRef.current?.onBadKey?.();
         toast.error("Add a Groq API key in Settings first.");
         return;
       }
@@ -173,7 +183,7 @@ export function useSuggestionEngine(opts?: {
         if (err instanceof SuggestError) {
           if (err.status === 401) {
             toast.error("Bad Groq API key.");
-            opts?.onBadKey?.();
+            optsRef.current?.onBadKey?.();
           } else if (err.status === 429) {
             toast.warning("Groq rate-limited — will retry on next tick.");
           } else if (err.code === "invalid_json") {
@@ -197,27 +207,36 @@ export function useSuggestionEngine(opts?: {
       setPendingBatch,
       setLastBatchAt,
       setRunningSummary,
-      opts,
     ],
   );
 
+  // Ref-based indirection so the interval effect below can depend only on
+  // primitives. Rebuilding the timer every time `generate` changes identity
+  // would cause the 30 s setTimeout to reset on every re-render.
+  const generateRef = useRef(generate);
+  useEffect(() => {
+    generateRef.current = generate;
+  }, [generate]);
+
   const generateNow = useCallback(async () => {
     setNextTickAt(Date.now() + intervalSec * 1000);
-    await generate(true);
-  }, [generate, intervalSec]);
+    await generateRef.current(true);
+  }, [intervalSec]);
 
-  // Auto-tick
+  // Auto-tick — note: does NOT depend on `generate`; uses generateRef so the
+  // timer survives parent re-renders.
   useEffect(() => {
     if (!isRecording) return;
-    // First batch fires once we have 15 s of audio — wait for it
+    // First batch fires once we have at least one transcript chunk —
+    // wait for the configured interval (capped at 30 s) before the first call.
     const firstDelay = Math.min(intervalSec, 30) * 1000;
     setNextTickAt(Date.now() + firstDelay);
     const t0 = window.setTimeout(() => {
-      void generate(false);
+      void generateRef.current(false);
       setNextTickAt(Date.now() + intervalSec * 1000);
     }, firstDelay);
     const id = window.setInterval(() => {
-      void generate(false);
+      void generateRef.current(false);
       setNextTickAt(Date.now() + intervalSec * 1000);
     }, intervalSec * 1000);
     return () => {
@@ -225,7 +244,7 @@ export function useSuggestionEngine(opts?: {
       window.clearInterval(id);
       abortRef.current?.abort();
     };
-  }, [isRecording, intervalSec, generate]);
+  }, [isRecording, intervalSec]);
 
   // 1-Hz clock only when recording, just for the countdown pill
   useEffect(() => {

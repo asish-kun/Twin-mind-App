@@ -51,6 +51,16 @@ export interface LiveRecorderOptions {
   onError?: (err: RecorderError, detail?: unknown) => void;
 }
 
+/**
+ * Captures mic audio in complete, self-contained chunks.
+ *
+ * Why stop/start instead of MediaRecorder.start(timeslice)?
+ * With timeslice, only the first emitted Blob contains the WebM / Ogg header.
+ * Chunks 2..N are headerless fragments that Whisper cannot decode. Instead we
+ * run a fresh MediaRecorder for each chunk — start, wait chunkSeconds, stop;
+ * on stop the accumulated data forms a valid standalone file. There's a small
+ * (~20–50 ms) gap between cycles but that is preferable to unusable chunks.
+ */
 export class LiveRecorder {
   private opts: LiveRecorderOptions;
   private stream: MediaStream | null = null;
@@ -58,9 +68,13 @@ export class LiveRecorder {
   private ac: AudioContext | null = null;
   private analyser: AnalyserNode | null = null;
   private levelTimer: number | null = null;
+  private cycleTimer: number | null = null;
+  private running = false;
   private startedAt = 0;
+  private cycleStartedAt = 0;
   private seq = 0;
   private mimeType = "audio/webm";
+  private chunkBlobs: Blob[] = [];
 
   constructor(opts: LiveRecorderOptions) {
     this.opts = opts;
@@ -95,69 +109,113 @@ export class LiveRecorder {
     }
 
     this.mimeType = pickMimeType() ?? "audio/webm";
-    this.recorder = new MediaRecorder(this.stream, {
-      mimeType: this.mimeType,
-      audioBitsPerSecond: 32_000,
-    });
     this.startedAt = performance.now();
     this.seq = 0;
+    this.running = true;
 
-    this.recorder.ondataavailable = (ev: BlobEvent) => {
-      if (!ev.data || ev.data.size === 0) return;
-      const now = performance.now();
-      const seq = this.seq++;
-      const tEnd = (now - this.startedAt) / 1000;
-      const tStart = Math.max(0, tEnd - this.opts.chunkSeconds);
-      this.opts.onChunk({
-        blob: ev.data,
-        t_start: tStart,
-        t_end: tEnd,
-        seq,
+    if (this.opts.onLevel) this.setupAnalyser(this.stream);
+    this.startCycle();
+  }
+
+  private setupAnalyser(stream: MediaStream) {
+    try {
+      const AC: typeof AudioContext =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext })
+          .webkitAudioContext;
+      this.ac = new AC();
+      const src = this.ac.createMediaStreamSource(stream);
+      this.analyser = this.ac.createAnalyser();
+      this.analyser.fftSize = 512;
+      src.connect(this.analyser);
+      const buf = new Uint8Array(this.analyser.frequencyBinCount);
+      const tick = () => {
+        if (!this.analyser) return;
+        this.analyser.getByteTimeDomainData(buf);
+        let sum = 0;
+        for (let i = 0; i < buf.length; i++) {
+          const v = (buf[i]! - 128) / 128;
+          sum += v * v;
+        }
+        const rms = Math.sqrt(sum / buf.length);
+        this.opts.onLevel?.(rms);
+        this.levelTimer = requestAnimationFrame(tick);
+      };
+      this.levelTimer = requestAnimationFrame(tick);
+    } catch {
+      // level monitoring is optional
+    }
+  }
+
+  private startCycle() {
+    if (!this.running || !this.stream) return;
+    let rec: MediaRecorder;
+    try {
+      rec = new MediaRecorder(this.stream, {
         mimeType: this.mimeType,
+        audioBitsPerSecond: 32_000,
       });
+    } catch (e) {
+      this.opts.onError?.("unknown", e);
+      this.running = false;
+      return;
+    }
+
+    this.recorder = rec;
+    this.chunkBlobs = [];
+    this.cycleStartedAt = performance.now();
+
+    rec.ondataavailable = (ev: BlobEvent) => {
+      if (ev.data && ev.data.size > 0) this.chunkBlobs.push(ev.data);
     };
 
-    this.recorder.onerror = (e) => {
+    rec.onerror = (e) => {
       this.opts.onError?.("unknown", e);
     };
 
-    // Analyser for waveform bars
-    if (this.opts.onLevel) {
-      try {
-        const AC: typeof AudioContext =
-          window.AudioContext ||
-          (window as unknown as { webkitAudioContext: typeof AudioContext })
-            .webkitAudioContext;
-        this.ac = new AC();
-        const src = this.ac.createMediaStreamSource(this.stream);
-        this.analyser = this.ac.createAnalyser();
-        this.analyser.fftSize = 512;
-        src.connect(this.analyser);
-        const buf = new Uint8Array(this.analyser.frequencyBinCount);
-        const tick = () => {
-          if (!this.analyser) return;
-          this.analyser.getByteTimeDomainData(buf);
-          let sum = 0;
-          for (let i = 0; i < buf.length; i++) {
-            const v = (buf[i]! - 128) / 128;
-            sum += v * v;
-          }
-          const rms = Math.sqrt(sum / buf.length);
-          this.opts.onLevel?.(rms);
-          this.levelTimer = requestAnimationFrame(tick);
-        };
-        this.levelTimer = requestAnimationFrame(tick);
-      } catch {
-        // level monitoring is optional
+    rec.onstop = () => {
+      const collected = this.chunkBlobs;
+      this.chunkBlobs = [];
+      if (collected.length > 0) {
+        const blob = new Blob(collected, { type: this.mimeType });
+        if (blob.size > 0) {
+          const now = performance.now();
+          const tEnd = (now - this.startedAt) / 1000;
+          const tStart = Math.max(0, (this.cycleStartedAt - this.startedAt) / 1000);
+          const seq = this.seq++;
+          this.opts.onChunk({
+            blob,
+            t_start: tStart,
+            t_end: tEnd,
+            seq,
+            mimeType: this.mimeType,
+          });
+        }
       }
-    }
+      if (this.running) {
+        // Small delay lets the previous MediaRecorder fully release before the next one starts
+        window.setTimeout(() => this.startCycle(), 0);
+      }
+    };
 
-    this.recorder.start(this.opts.chunkSeconds * 1000);
+    rec.start();
+    this.cycleTimer = window.setTimeout(() => {
+      try {
+        if (rec.state !== "inactive") rec.stop();
+      } catch {
+        // ignore
+      }
+    }, this.opts.chunkSeconds * 1000);
   }
 
   stop(): void {
+    this.running = false;
+    if (this.cycleTimer !== null) {
+      window.clearTimeout(this.cycleTimer);
+      this.cycleTimer = null;
+    }
     try {
-      this.recorder?.stop();
+      if (this.recorder && this.recorder.state !== "inactive") this.recorder.stop();
     } catch {
       // ignore
     }
